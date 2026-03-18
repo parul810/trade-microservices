@@ -1,0 +1,205 @@
+{
+  "title": "Kafka Producer — execution-service",
+  "uid": "kafka-producer-exec",
+  "schemaVersion": 38,
+  "refresh": "10s",
+  "time": { "from": "now-15m", "to": "now" },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Record Send Rate (records/sec)",
+      "description": "How many records are being sent to the broker per second. Watch this track your trade throughput.",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "kafka_producer_record_send_rate{application=\"execution-service\"}",
+          "legendFormat": "{{client_id}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": { "mode": "palette-classic" }
+        }
+      }
+    },
+    {
+      "id": 2,
+      "title": "Outgoing Byte Rate (bytes/sec)",
+      "description": "Network bytes/sec flowing from producer to broker. At high volume this tells you if you are saturating the network link.",
+      "type": "timeseries",
+      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "kafka_producer_outgoing_byte_rate{application=\"execution-service\"}",
+          "legendFormat": "{{client_id}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "Bps",
+          "color": { "mode": "palette-classic" }
+        }
+      }
+    },
+    {
+      "id": 3,
+      "title": "Batch Size Avg (bytes)",
+      "description": "Average bytes per batch sent to the broker. Small value (like 200B) = one record per batch (low volume). Larger = Kafka is batching efficiently. Tunable via batch.size and linger.ms.",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "kafka_producer_batch_size_avg{application=\"execution-service\"}",
+          "legendFormat": "{{client_id}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "color": { "mode": "palette-classic" }
+        }
+      }
+    },
+    {
+      "id": 4,
+      "title": "Record Queue Time Avg (ms)",
+      "description": "How long records wait in the producer buffer before being sent. Driven by linger.ms (default 0 = send immediately). If this grows, records are queuing behind each other — consider increasing batch.size.",
+      "type": "timeseries",
+      "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "kafka_producer_record_queue_time_avg{application=\"execution-service\"}",
+          "legendFormat": "{{client_id}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms",
+          "color": { "mode": "palette-classic" }
+        }
+      }
+    },
+    {
+      "id": 5,
+      "title": "Bufferpool Wait Ratio",
+      "description": "Fraction of time producer threads blocked waiting for buffer memory. 0.0 = healthy. Approaching 1.0 = producer is back-pressured — increase buffer.memory or slow down send rate.",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 16, "w": 8, "h": 8 },
+      "targets": [
+        {
+          "expr": "kafka_producer_bufferpool_wait_ratio{application=\"execution-service\"}",
+          "legendFormat": "{{client_id}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "min": 0,
+          "max": 1,
+          "color": { "mode": "palette-classic" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 0.5 },
+              { "color": "red", "value": 0.8 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 6,
+      "title": "Request Latency Avg (ms)",
+      "description": "Round-trip time from producer send to broker ack. This is your Kafka network baseline. Spikes here mean broker or network is slow.",
+      "type": "timeseries",
+      "gridPos": { "x": 8, "y": 16, "w": 8, "h": 8 },
+      "targets": [
+        {
+          "expr": "kafka_producer_request_latency_avg{application=\"execution-service\"}",
+          "legendFormat": "{{client_id}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms",
+          "color": { "mode": "palette-classic" }
+        }
+      }
+    },
+    {
+      "id": 7,
+      "title": "Requests In Flight",
+      "description": "Requests sent to broker but not yet acknowledged. Default max is 5 (max.in.flight.requests.per.connection). If this stays at max, new sends will block — broker is not keeping up.",
+      "type": "timeseries",
+      "gridPos": { "x": 16, "y": 16, "w": 8, "h": 8 },
+      "targets": [
+        {
+          "expr": "kafka_producer_requests_in_flight{application=\"execution-service\"}",
+          "legendFormat": "{{client_id}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": { "mode": "palette-classic" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 3 },
+              { "color": "red", "value": 5 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 8,
+      "title": "Record Error Rate",
+      "description": "Records that failed to be sent after all retries. Any non-zero value is critical — means trades are being lost at the Kafka layer.",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 24, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "kafka_producer_record_error_rate{application=\"execution-service\"}",
+          "legendFormat": "{{client_id}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": { "mode": "fixed", "fixedColor": "red" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": 0.001 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 9,
+      "title": "Record Retry Rate",
+      "description": "Records being retried due to transient errors. Some retries are expected with acks=all. A sustained high rate means the broker is unstable.",
+      "type": "timeseries",
+      "gridPos": { "x": 12, "y": 24, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "kafka_producer_record_retry_rate{application=\"execution-service\"}",
+          "legendFormat": "{{client_id}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": { "mode": "palette-classic" }
+        }
+      }
+    }
+  ]
+}
