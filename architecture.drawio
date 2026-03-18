@@ -1,311 +1,342 @@
-<mxfile host="app.diagrams.net" modified="2026-03-12T00:00:00.000Z" agent="Claude" version="21.0.0" type="device">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15" version="29.6.1">
   <diagram name="Trade Microservices Architecture" id="trade-arch">
-    <mxGraphModel dx="1422" dy="762" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1700" pageHeight="960" math="0" shadow="0">
+    <mxGraphModel dx="2368" dy="855" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1700" pageHeight="1100" math="0" shadow="0">
       <root>
-        <mxCell id="0"/>
-        <mxCell id="1" parent="0"/>
-
-        <!-- ═══════════════════════════════════════════════
-             TITLE
-        ═══════════════════════════════════════════════ -->
-        <mxCell id="title" value="Trade Microservices — Architecture" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=20;fontStyle=1;fontColor=#1A237E;" vertex="1" parent="1">
-          <mxGeometry x="500" y="8" width="700" height="36" as="geometry"/>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=20;fontStyle=1;fontColor=#1A237E;" value="Trade Microservices — Architecture" vertex="1">
+          <mxGeometry height="36" width="700" x="500" y="8" as="geometry" />
         </mxCell>
-
-        <!-- ═══════════════════════════════════════════════
-             ZONE BACKGROUNDS
-        ═══════════════════════════════════════════════ -->
-
-        <!-- External zone -->
-        <mxCell id="zone_ext" value="&lt;b style=&apos;font-size:12px;color:#BF360C;&apos;&gt;External&lt;/b&gt;" style="rounded=1;arcSize=3;strokeColor=#E64A19;fillColor=#FBE9E7;verticalAlign=top;align=left;spacingLeft=10;spacingTop=6;fontSize=12;" vertex="1" parent="1">
-          <mxGeometry x="20" y="50" width="1660" height="110" as="geometry"/>
+        <mxCell id="zone_ext" parent="1" style="rounded=1;arcSize=3;strokeColor=#E64A19;fillColor=#FBE9E7;verticalAlign=top;align=left;spacingLeft=10;spacingTop=6;fontSize=12;fontStyle=1" value="External" vertex="1">
+          <mxGeometry height="120" width="1561" x="20" y="50" as="geometry" />
         </mxCell>
-
-        <!-- Microservices zone -->
-        <mxCell id="zone_svc" value="&lt;b style=&apos;font-size:12px;color:#0D47A1;&apos;&gt;Microservices&lt;/b&gt;" style="rounded=1;arcSize=3;strokeColor=#1565C0;fillColor=#E3F2FD;verticalAlign=top;align=left;spacingLeft=10;spacingTop=6;" vertex="1" parent="1">
-          <mxGeometry x="20" y="180" width="1660" height="300" as="geometry"/>
+        <mxCell id="zone_svc" parent="1" style="rounded=1;arcSize=3;strokeColor=#1565C0;fillColor=#E3F2FD;verticalAlign=top;align=left;spacingLeft=10;spacingTop=6;fontStyle=1" value="Microservices" vertex="1">
+          <mxGeometry height="330" width="1660" x="-67" y="190" as="geometry" />
         </mxCell>
-
-        <!-- Kafka zone -->
-        <mxCell id="zone_kafka" value="&lt;b style=&apos;font-size:12px;color:#E65100;&apos;&gt;Kafka Broker · localhost:9094&lt;/b&gt;" style="rounded=1;arcSize=3;strokeColor=#FB8C00;fillColor=#FFF8E1;verticalAlign=top;align=left;spacingLeft=10;spacingTop=6;" vertex="1" parent="1">
-          <mxGeometry x="20" y="500" width="1660" height="165" as="geometry"/>
+        <mxCell id="zone_kafka" parent="1" style="rounded=1;arcSize=3;strokeColor=#FB8C00;fillColor=#FFF8E1;verticalAlign=top;align=left;spacingLeft=10;spacingTop=6;fontStyle=1" value="Kafka Broker" vertex="1">
+          <mxGeometry height="165" width="1660" x="20" y="540" as="geometry" />
         </mxCell>
-
-        <!-- Data stores zone -->
-        <mxCell id="zone_data" value="&lt;b style=&apos;font-size:12px;color:#1B5E20;&apos;&gt;Data Stores&lt;/b&gt;" style="rounded=1;arcSize=3;strokeColor=#388E3C;fillColor=#E8F5E9;verticalAlign=top;align=left;spacingLeft=10;spacingTop=6;" vertex="1" parent="1">
-          <mxGeometry x="20" y="685" width="1660" height="195" as="geometry"/>
+        <mxCell id="zone_data" parent="1" style="rounded=1;arcSize=3;strokeColor=#388E3C;fillColor=#E8F5E9;verticalAlign=top;align=left;spacingLeft=10;spacingTop=6;fontStyle=1" value="Data Stores" vertex="1">
+          <mxGeometry height="155" width="1660" x="20" y="725" as="geometry" />
         </mxCell>
-
-        <!-- ═══════════════════════════════════════════════
-             EXTERNAL NODES
-        ═══════════════════════════════════════════════ -->
-
-        <mxCell id="client" value="&lt;b&gt;Client&lt;/b&gt;&lt;br&gt;curl / Browser" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E64A19;fontColor=#ffffff;strokeColor=#BF360C;fontStyle=0;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="70" y="80" width="140" height="55" as="geometry"/>
+        <mxCell id="zone_monitoring" parent="1" style="rounded=1;arcSize=3;strokeColor=#7B1FA2;fillColor=#F3E5F5;verticalAlign=top;align=left;spacingLeft=10;spacingTop=6;fontStyle=1" value="Monitoring" vertex="1">
+          <mxGeometry height="120" width="1660" x="20" y="895" as="geometry" />
         </mxCell>
-
-        <mxCell id="massivecom" value="&lt;b&gt;Massive.com&lt;/b&gt;&lt;br&gt;Stock Price API&lt;br&gt;(prev close, 60s)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E64A19;fontColor=#ffffff;strokeColor=#BF360C;fontStyle=0;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="1460" y="73" width="175" height="65" as="geometry"/>
+        <mxCell id="client" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E64A19;fontColor=#ffffff;strokeColor=#BF360C;fontStyle=0;fontSize=11;" value="&lt;b&gt;Client&lt;/b&gt;&lt;br&gt;curl / REST calls" vertex="1">
+          <mxGeometry height="55" width="140" x="70" y="82" as="geometry" />
         </mxCell>
-
-        <!-- ═══════════════════════════════════════════════
-             MICROSERVICES — ROW 1
-        ═══════════════════════════════════════════════ -->
-
-        <mxCell id="auth" value="&lt;b&gt;auth-service&lt;/b&gt;&lt;br&gt;:8084&lt;br&gt;POST /auth/login&lt;br&gt;→ JWT (HS256, 24h)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1565C0;fontColor=#ffffff;strokeColor=#0D47A1;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="60" y="205" width="170" height="80" as="geometry"/>
+        <mxCell id="dashboard" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#BF360C;fontColor=#ffffff;strokeColor=#7F0000;fontStyle=0;fontSize=11;" value="&lt;b&gt;Browser Dashboard&lt;/b&gt;&lt;br&gt;localhost:8087/&lt;br&gt;WebSocket + REST" vertex="1">
+          <mxGeometry height="68" width="165" x="760" y="76" as="geometry" />
         </mxCell>
-
-        <mxCell id="price" value="&lt;b&gt;price-service&lt;/b&gt;&lt;br&gt;:8083&lt;br&gt;GET /prices/{symbol}&lt;br&gt;POST /prices (manual)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1565C0;fontColor=#ffffff;strokeColor=#0D47A1;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="330" y="205" width="170" height="80" as="geometry"/>
+        <mxCell id="yahoo" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E64A19;fontColor=#ffffff;strokeColor=#BF360C;fontStyle=0;fontSize=11;" value="&lt;b&gt;Yahoo Finance v8&lt;/b&gt;&lt;br&gt;Real baseline prices&lt;br&gt;(startup fetch, no key)" vertex="1">
+          <mxGeometry height="65" width="175" x="1348" y="86" as="geometry" />
         </mxCell>
-
-        <mxCell id="trade" value="&lt;b&gt;trade-service&lt;/b&gt;&lt;br&gt;:8085&lt;br&gt;POST /trades&lt;br&gt;(requires JWT)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1565C0;fontColor=#ffffff;strokeColor=#0D47A1;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="620" y="205" width="170" height="80" as="geometry"/>
+        <mxCell id="auth" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1565C0;fontColor=#ffffff;strokeColor=#0D47A1;fontSize=11;" value="&lt;b&gt;auth-service&lt;/b&gt;&lt;br&gt;:8084&lt;br&gt;POST /auth/login → JWT" vertex="1">
+          <mxGeometry height="80" width="170" x="55" y="215" as="geometry" />
         </mxCell>
-
-        <mxCell id="portfolio" value="&lt;b&gt;portfolio-service&lt;/b&gt;&lt;br&gt;:8087&lt;br&gt;GET /portfolio/{id}&lt;br&gt;GET /managers (JWT)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1565C0;fontColor=#ffffff;strokeColor=#0D47A1;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="1240" y="205" width="180" height="80" as="geometry"/>
+        <mxCell id="price" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1565C0;fontColor=#ffffff;strokeColor=#0D47A1;fontSize=11;" value="&lt;b&gt;price-service&lt;/b&gt;&lt;br&gt;:8083&lt;br&gt;POST /prices (manual)" vertex="1">
+          <mxGeometry height="80" width="175" x="305" y="215" as="geometry" />
         </mxCell>
-
-        <!-- ═══════════════════════════════════════════════
-             MICROSERVICES — ROW 2
-        ═══════════════════════════════════════════════ -->
-
-        <mxCell id="execution" value="&lt;b&gt;execution-service&lt;/b&gt;&lt;br&gt;:8086&lt;br&gt;Validates, saves trade&lt;br&gt;Updates position" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#283593;fontColor=#ffffff;strokeColor=#1A237E;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="510" y="345" width="180" height="80" as="geometry"/>
+        <mxCell id="trade" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1565C0;fontColor=#ffffff;strokeColor=#0D47A1;fontSize=11;" value="&lt;b&gt;trade-service&lt;/b&gt;&lt;br&gt;:8085&lt;br&gt;POST /trades&lt;div&gt;DummyTrader 30s&lt;/div&gt;" vertex="1">
+          <mxGeometry height="80" width="175" x="601" y="215" as="geometry" />
         </mxCell>
-
-        <mxCell id="audit" value="&lt;b&gt;audit-service&lt;/b&gt;&lt;br&gt;:8082&lt;br&gt;GET /audit/trades/{id}&lt;br&gt;GET /audit/stats" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#283593;fontColor=#ffffff;strokeColor=#1A237E;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="780" y="345" width="180" height="80" as="geometry"/>
+        <mxCell id="portfolio" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1565C0;fontColor=#ffffff;strokeColor=#0D47A1;fontSize=11;" value="&lt;b&gt;portfolio-service&lt;/b&gt;&lt;br&gt;:8087&lt;br&gt;GET /managers&lt;br&gt;WS /ws" vertex="1">
+          <mxGeometry height="80" width="185" x="1230" y="215" as="geometry" />
         </mxCell>
-
-        <!-- JWT note -->
-        <mxCell id="jwt_note" value="🔐 JWT verified locally in each service&lt;br&gt;(shared HS256 secret — no auth-service call)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF9C4;strokeColor=#F9A825;fontSize=10;fontStyle=2;" vertex="1" parent="1">
-          <mxGeometry x="930" y="215" width="260" height="45" as="geometry"/>
+        <mxCell id="execution" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#283593;fontColor=#ffffff;strokeColor=#1A237E;fontSize=11;" value="&lt;b&gt;execution-service&lt;/b&gt;&lt;br&gt;:8086&lt;br&gt;Validates + saves trade" vertex="1">
+          <mxGeometry height="80" width="185" x="490" y="370" as="geometry" />
         </mxCell>
-
-        <!-- ═══════════════════════════════════════════════
-             KAFKA TOPICS
-        ═══════════════════════════════════════════════ -->
-
-        <mxCell id="topic_raw" value="&lt;b&gt;trades.raw.topic&lt;/b&gt;&lt;br&gt;key=accountId · 2 partitions&lt;br&gt;TradeEvent" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF59D;strokeColor=#F9A825;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="80" y="535" width="190" height="65" as="geometry"/>
+        <mxCell id="audit" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#283593;fontColor=#ffffff;strokeColor=#1A237E;fontSize=11;" value="&lt;b&gt;audit-service&lt;/b&gt;&lt;br&gt;:8082&lt;br&gt;GET /audit/trades/{id}&lt;br&gt;GET /audit/stats" vertex="1">
+          <mxGeometry height="80" width="180" x="770" y="370" as="geometry" />
         </mxCell>
-
-        <mxCell id="topic_processed" value="&lt;b&gt;trades.processed.topic&lt;/b&gt;&lt;br&gt;TradeProcessedEvent&lt;br&gt;(ACCEPTED / REJECTED)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF59D;strokeColor=#F9A825;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="360" y="535" width="200" height="65" as="geometry"/>
+        <mxCell id="jwt_note" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF9C4;strokeColor=#F9A825;fontSize=10;fontStyle=2;" value="&lt;b&gt;Shared Security (trade-commons)&lt;/b&gt;" vertex="1">
+          <mxGeometry height="55" width="190" x="1014" y="270" as="geometry" />
         </mxCell>
-
-        <mxCell id="topic_live" value="&lt;b&gt;prices.live.topic&lt;/b&gt;&lt;br&gt;PriceEvent&lt;br&gt;(price, open, high, low, prevClose)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF59D;strokeColor=#F9A825;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="820" y="535" width="210" height="65" as="geometry"/>
+        <mxCell id="dummy_note" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#388E3C;fontSize=10;" value="&lt;b&gt;DummyTraderScheduler&lt;/b&gt;&lt;br&gt;@Scheduled fixedDelay=30s&lt;br&gt;Reads live price from Redis" vertex="1">
+          <mxGeometry height="65" width="230" x="614" y="302" as="geometry" />
         </mxCell>
-
-        <mxCell id="topic_updated" value="&lt;b&gt;prices.updated.topic&lt;/b&gt;&lt;br&gt;PriceUpdatedEvent&lt;br&gt;(symbol, price)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF59D;strokeColor=#F9A825;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="1120" y="535" width="200" height="65" as="geometry"/>
+        <mxCell id="ws_note" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8EAF6;strokeColor=#3949AB;fontSize=10;" value="&lt;b&gt;WebSocket push&lt;/b&gt;&lt;br&gt;/topic/portfolio/{accountId}&lt;br&gt;Triggered by price update or trade event" vertex="1">
+          <mxGeometry height="55" width="202" x="1382" y="316" as="geometry" />
         </mxCell>
-
-        <!-- ═══════════════════════════════════════════════
-             DATA STORES
-        ═══════════════════════════════════════════════ -->
-
-        <mxCell id="postgres" value="&lt;b&gt;PostgreSQL&lt;/b&gt;&lt;br&gt;localhost:5433 / trading&lt;br&gt;users · trades · positions&lt;br&gt;trade_audit" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=18;fillColor=#2E7D32;fontColor=#ffffff;strokeColor=#1B5E20;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="170" y="710" width="185" height="120" as="geometry"/>
+        <mxCell id="topic_raw" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF59D;strokeColor=#F9A825;fontSize=10;" value="&lt;b&gt;trades.raw.topic&lt;/b&gt;&lt;br&gt;key=accountId · 2 partitions&lt;br&gt;TradeEvent (+ managerId)" vertex="1">
+          <mxGeometry height="65" width="195" x="75" y="573" as="geometry" />
         </mxCell>
-
-        <mxCell id="redis" value="&lt;b&gt;Redis&lt;/b&gt;&lt;br&gt;localhost:6380&lt;br&gt;price:{sym} · position:{id}:{sym}&lt;br&gt;portfolio:{id} (30s TTL)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=18;fillColor=#6A1B9A;fontColor=#ffffff;strokeColor=#4A148C;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="880" y="710" width="220" height="120" as="geometry"/>
+        <mxCell id="topic_processed" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF59D;strokeColor=#F9A825;fontSize=10;" value="&lt;b&gt;trades.processed.topic&lt;/b&gt;&lt;br&gt;TradeProcessedEvent&lt;br&gt;(ACCEPTED / REJECTED)" vertex="1">
+          <mxGeometry height="65" width="205" x="355" y="573" as="geometry" />
         </mxCell>
-
-        <!-- ═══════════════════════════════════════════════
-             LEGEND
-        ═══════════════════════════════════════════════ -->
-
-        <mxCell id="legend_bg" value="&lt;b&gt;Legend&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAFAFA;strokeColor=#9E9E9E;verticalAlign=top;align=left;spacingLeft=8;spacingTop=6;fontSize=11;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="1420" y="720" width="230" height="145" as="geometry"/>
+        <mxCell id="topic_live" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF59D;strokeColor=#F9A825;fontSize=10;" value="&lt;b&gt;prices.live.topic&lt;/b&gt;&lt;br&gt;PriceEvent&lt;br&gt;(price, open, high, low, prevClose)" vertex="1">
+          <mxGeometry height="65" width="215" x="810" y="573" as="geometry" />
         </mxCell>
-
-        <mxCell id="leg_http_line" value="" style="edgeStyle=none;strokeColor=#1976D2;strokeWidth=2;" edge="1" parent="1">
+        <mxCell id="topic_updated" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF59D;strokeColor=#F9A825;fontSize=10;" value="&lt;b&gt;prices.updated.topic&lt;/b&gt;&lt;br&gt;PriceUpdatedEvent&lt;br&gt;(symbol, price)" vertex="1">
+          <mxGeometry height="65" width="205" x="1115" y="573" as="geometry" />
+        </mxCell>
+        <mxCell id="postgres" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=18;fillColor=#2E7D32;fontColor=#ffffff;strokeColor=#1B5E20;fontSize=10;" value="&lt;b&gt;PostgreSQL&lt;/b&gt;&lt;br&gt;localhost:5433 / trading&lt;br&gt;users · trades · positions · trade_audit" vertex="1">
+          <mxGeometry height="110" width="200" x="160" y="748" as="geometry" />
+        </mxCell>
+        <mxCell id="redis" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=18;fillColor=#6A1B9A;fontColor=#ffffff;strokeColor=#4A148C;fontSize=10;" value="&lt;b&gt;Redis&lt;/b&gt; · localhost:6380&lt;br&gt;price:{sym} · pos:{id}:{sym}&lt;br&gt;portfolio:{id} (30s TTL)&lt;br&gt;account:manager:{id} · manager:accounts:{id}" vertex="1">
+          <mxGeometry height="120" width="308" x="830" y="742" as="geometry" />
+        </mxCell>
+        <mxCell id="prometheus" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#6A1B9A;fontColor=#ffffff;strokeColor=#4A148C;fontSize=11;" value="&lt;b&gt;Prometheus&lt;/b&gt;&lt;br&gt;localhost:9090&lt;br&gt;Scrapes /actuator/prometheus" vertex="1">
+          <mxGeometry height="70" width="200" x="450" y="920" as="geometry" />
+        </mxCell>
+        <mxCell id="grafana" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#7B1FA2;fontColor=#ffffff;strokeColor=#4A148C;fontSize=11;" value="&lt;b&gt;Grafana&lt;/b&gt;&lt;br&gt;localhost:3000&lt;br&gt;Dashboards &amp; alerts" vertex="1">
+          <mxGeometry height="70" width="200" x="720" y="920" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_bg" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAFAFA;strokeColor=#9E9E9E;verticalAlign=top;align=left;spacingLeft=8;spacingTop=6;fontSize=11;fontStyle=1;" value="&lt;b&gt;Legend&lt;/b&gt;" vertex="1">
+          <mxGeometry height="175" width="235" x="1420" y="748" as="geometry" />
+        </mxCell>
+        <mxCell id="leg_http_line" edge="1" parent="1" style="edgeStyle=none;strokeColor=#1976D2;strokeWidth=2;" value="">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1435" y="757" as="sourcePoint"/>
-            <mxPoint x="1490" y="757" as="targetPoint"/>
+            <mxPoint x="1435" y="782" as="sourcePoint" />
+            <mxPoint x="1490" y="782" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="leg_http_txt" value="HTTP request" style="text;html=1;fontSize=10;align=left;" vertex="1" parent="1">
-          <mxGeometry x="1498" y="748" width="130" height="20" as="geometry"/>
+        <mxCell id="leg_http_txt" parent="1" style="text;html=1;fontSize=10;align=left;" value="HTTP request" vertex="1">
+          <mxGeometry height="20" width="140" x="1498" y="773" as="geometry" />
         </mxCell>
-
-        <mxCell id="leg_kpub_line" value="" style="edgeStyle=none;strokeColor=#E65100;strokeWidth=2;" edge="1" parent="1">
+        <mxCell id="leg_ws_line" edge="1" parent="1" style="edgeStyle=none;strokeColor=#3949AB;strokeWidth=2;" value="">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1435" y="778" as="sourcePoint"/>
-            <mxPoint x="1490" y="778" as="targetPoint"/>
+            <mxPoint x="1435" y="802" as="sourcePoint" />
+            <mxPoint x="1490" y="802" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="leg_kpub_txt" value="Kafka publish" style="text;html=1;fontSize=10;align=left;" vertex="1" parent="1">
-          <mxGeometry x="1498" y="769" width="130" height="20" as="geometry"/>
+        <mxCell id="leg_ws_txt" parent="1" style="text;html=1;fontSize=10;align=left;" value="WebSocket (STOMP)" vertex="1">
+          <mxGeometry height="20" width="140" x="1498" y="793" as="geometry" />
         </mxCell>
-
-        <mxCell id="leg_kcon_line" value="" style="edgeStyle=none;strokeColor=#E65100;strokeWidth=2;dashed=1;" edge="1" parent="1">
+        <mxCell id="leg_kpub_line" edge="1" parent="1" style="edgeStyle=none;strokeColor=#E65100;strokeWidth=2;" value="">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1435" y="799" as="sourcePoint"/>
-            <mxPoint x="1490" y="799" as="targetPoint"/>
+            <mxPoint x="1435" y="822" as="sourcePoint" />
+            <mxPoint x="1490" y="822" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="leg_kcon_txt" value="Kafka consume" style="text;html=1;fontSize=10;align=left;" vertex="1" parent="1">
-          <mxGeometry x="1498" y="790" width="130" height="20" as="geometry"/>
+        <mxCell id="leg_kpub_txt" parent="1" style="text;html=1;fontSize=10;align=left;" value="Kafka publish" vertex="1">
+          <mxGeometry height="20" width="140" x="1498" y="813" as="geometry" />
         </mxCell>
-
-        <mxCell id="leg_redis_line" value="" style="edgeStyle=none;strokeColor=#6A1B9A;strokeWidth=2;" edge="1" parent="1">
+        <mxCell id="leg_kcon_line" edge="1" parent="1" style="edgeStyle=none;strokeColor=#E65100;strokeWidth=2;dashed=1;" value="">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1435" y="820" as="sourcePoint"/>
-            <mxPoint x="1490" y="820" as="targetPoint"/>
+            <mxPoint x="1435" y="842" as="sourcePoint" />
+            <mxPoint x="1490" y="842" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="leg_redis_txt" value="Redis read/write" style="text;html=1;fontSize=10;align=left;" vertex="1" parent="1">
-          <mxGeometry x="1498" y="811" width="130" height="20" as="geometry"/>
+        <mxCell id="leg_kcon_txt" parent="1" style="text;html=1;fontSize=10;align=left;" value="Kafka consume" vertex="1">
+          <mxGeometry height="20" width="140" x="1498" y="833" as="geometry" />
         </mxCell>
-
-        <mxCell id="leg_pg_line" value="" style="edgeStyle=none;strokeColor=#2E7D32;strokeWidth=2;" edge="1" parent="1">
+        <mxCell id="leg_redis_line" edge="1" parent="1" style="edgeStyle=none;strokeColor=#6A1B9A;strokeWidth=2;" value="">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1435" y="841" as="sourcePoint"/>
-            <mxPoint x="1490" y="841" as="targetPoint"/>
+            <mxPoint x="1435" y="862" as="sourcePoint" />
+            <mxPoint x="1490" y="862" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="leg_pg_txt" value="PostgreSQL" style="text;html=1;fontSize=10;align=left;" vertex="1" parent="1">
-          <mxGeometry x="1498" y="832" width="130" height="20" as="geometry"/>
+        <mxCell id="leg_redis_txt" parent="1" style="text;html=1;fontSize=10;align=left;" value="Redis read/write" vertex="1">
+          <mxGeometry height="20" width="140" x="1498" y="853" as="geometry" />
         </mxCell>
-
-        <!-- ═══════════════════════════════════════════════
-             EDGES — HTTP (client to services)
-        ═══════════════════════════════════════════════ -->
-
-        <mxCell id="e_client_auth" value="POST /login" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#1976D2;strokeWidth=1.5;fontColor=#1976D2;fontSize=9;" edge="1" source="client" target="auth" parent="1">
-          <mxGeometry relative="1" as="geometry"/>
+        <mxCell id="leg_pg_line" edge="1" parent="1" style="edgeStyle=none;strokeColor=#2E7D32;strokeWidth=2;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1435" y="882" as="sourcePoint" />
+            <mxPoint x="1490" y="882" as="targetPoint" />
+          </mxGeometry>
         </mxCell>
-
-        <mxCell id="e_client_trade" value="POST /trades" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#1976D2;strokeWidth=1.5;fontColor=#1976D2;fontSize=9;" edge="1" source="client" target="trade" parent="1">
-          <mxGeometry relative="1" as="geometry"/>
+        <mxCell id="leg_pg_txt" parent="1" style="text;html=1;fontSize=10;align=left;" value="PostgreSQL" vertex="1">
+          <mxGeometry height="20" width="140" x="1498" y="873" as="geometry" />
         </mxCell>
-
-        <mxCell id="e_client_portfolio" value="GET /portfolio" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#1976D2;strokeWidth=1.5;fontColor=#1976D2;fontSize=9;" edge="1" source="client" target="portfolio" parent="1">
-          <mxGeometry relative="1" as="geometry"/>
+        <mxCell id="leg_ext_line" edge="1" parent="1" style="edgeStyle=none;strokeColor=#BF360C;strokeWidth=2;dashed=1;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1435" y="902" as="sourcePoint" />
+            <mxPoint x="1490" y="902" as="targetPoint" />
+          </mxGeometry>
         </mxCell>
-
-        <mxCell id="e_client_audit" value="GET /audit/trades" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#1976D2;strokeWidth=1.5;fontColor=#1976D2;fontSize=9;" edge="1" source="client" target="audit" parent="1">
-          <mxGeometry relative="1" as="geometry"/>
+        <mxCell id="leg_ext_txt" parent="1" style="text;html=1;fontSize=10;align=left;" value="External API fetch" vertex="1">
+          <mxGeometry height="20" width="140" x="1498" y="893" as="geometry" />
         </mxCell>
-
-        <mxCell id="e_client_price" value="GET /prices" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#1976D2;strokeWidth=1.5;fontColor=#1976D2;fontSize=9;" edge="1" source="client" target="price" parent="1">
-          <mxGeometry relative="1" as="geometry"/>
+        <mxCell id="e_client_auth" edge="1" parent="1" source="client" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#1976D2;strokeWidth=1.5;fontColor=#1976D2;fontSize=9;" target="auth" value="POST /login">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
-
-        <!-- ═══════════════════════════════════════════════
-             EDGES — External API
-        ═══════════════════════════════════════════════ -->
-
-        <mxCell id="e_massive_price" value="fetch every 60s" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#BF360C;strokeWidth=1.5;fontColor=#BF360C;fontSize=9;dashed=1;" edge="1" source="massivecom" target="price" parent="1">
-          <mxGeometry relative="1" as="geometry"/>
-        </mxCell>
-
-        <!-- ═══════════════════════════════════════════════
-             EDGES — Kafka PUBLISH (solid orange)
-        ═══════════════════════════════════════════════ -->
-
-        <mxCell id="e_trade_raw" value="publish TradeEvent" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#E65100;strokeWidth=2;fontColor=#E65100;fontSize=9;" edge="1" source="trade" target="topic_raw" parent="1">
-          <mxGeometry relative="1" as="geometry"/>
-        </mxCell>
-
-        <mxCell id="e_exec_processed" value="publish TradeProcessedEvent" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#E65100;strokeWidth=2;fontColor=#E65100;fontSize=9;" edge="1" source="execution" target="topic_processed" parent="1">
-          <mxGeometry relative="1" as="geometry"/>
-        </mxCell>
-
-        <mxCell id="e_price_live" value="publish PriceEvent" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#E65100;strokeWidth=2;fontColor=#E65100;fontSize=9;" edge="1" source="price" target="topic_live" parent="1">
-          <mxGeometry relative="1" as="geometry"/>
-        </mxCell>
-
-        <mxCell id="e_price_updated" value="publish PriceUpdatedEvent" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#E65100;strokeWidth=2;fontColor=#E65100;fontSize=9;" edge="1" source="price" target="topic_updated" parent="1">
-          <mxGeometry relative="1" as="geometry"/>
-        </mxCell>
-
-        <!-- ═══════════════════════════════════════════════
-             EDGES — Kafka CONSUME (dashed orange)
-        ═══════════════════════════════════════════════ -->
-
-        <mxCell id="e_raw_exec" value="trading-group" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#E65100;strokeWidth=2;fontColor=#E65100;fontSize=9;dashed=1;" edge="1" source="topic_raw" target="execution" parent="1">
-          <mxGeometry relative="1" as="geometry"/>
-        </mxCell>
-
-        <mxCell id="e_raw_audit" value="audit-group" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#E65100;strokeWidth=2;fontColor=#E65100;fontSize=9;dashed=1;" edge="1" source="topic_raw" target="audit" parent="1">
-          <mxGeometry relative="1" as="geometry"/>
-        </mxCell>
-
-        <mxCell id="e_processed_portfolio" value="portfolio-cache-group" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#E65100;strokeWidth=2;fontColor=#E65100;fontSize=9;dashed=1;" edge="1" source="topic_processed" target="portfolio" parent="1">
-          <mxGeometry relative="1" as="geometry"/>
-        </mxCell>
-
-        <mxCell id="e_live_price" value="price-consumer-group&lt;br&gt;→ writes to Redis" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#E65100;strokeWidth=2;fontColor=#E65100;fontSize=9;dashed=1;" edge="1" source="topic_live" target="price" parent="1">
+        <mxCell id="e_client_trade" edge="1" parent="1" source="client" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#1976D2;strokeWidth=1.5;fontColor=#1976D2;fontSize=9;" target="trade" value="POST /trades">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="925" y="640"/>
-              <mxPoint x="290" y="640"/>
-              <mxPoint x="290" y="295"/>
+              <mxPoint x="688" y="95" />
             </Array>
           </mxGeometry>
         </mxCell>
-
-        <mxCell id="e_updated_portfolio" value="portfolio-cache-group&lt;br&gt;(invalidate cache)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#E65100;strokeWidth=2;fontColor=#E65100;fontSize=9;dashed=1;" edge="1" source="topic_updated" target="portfolio" parent="1">
-          <mxGeometry relative="1" as="geometry"/>
-        </mxCell>
-
-        <!-- ═══════════════════════════════════════════════
-             EDGES — HTTP internal (portfolio → execution fallback)
-        ═══════════════════════════════════════════════ -->
-
-        <mxCell id="e_portfolio_exec" value="GET /internal/positions/{id}&lt;br&gt;(Redis cache miss fallback)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#0277BD;strokeWidth=1.5;fontColor=#0277BD;fontSize=9;dashed=1;" edge="1" source="portfolio" target="execution" parent="1">
+        <mxCell id="e_client_price" edge="1" parent="1" source="client" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#1976D2;strokeWidth=1.5;fontColor=#1976D2;fontSize=9;" target="price" value="GET /prices">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="1330" y="420"/>
-              <mxPoint x="600" y="420"/>
+              <mxPoint x="393" y="122" />
             </Array>
           </mxGeometry>
         </mxCell>
-
-        <!-- ═══════════════════════════════════════════════
-             EDGES — PostgreSQL
-        ═══════════════════════════════════════════════ -->
-
-        <mxCell id="e_auth_pg" value="users" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#2E7D32;strokeWidth=1.5;fontColor=#2E7D32;fontSize=9;" edge="1" source="auth" target="postgres" parent="1">
-          <mxGeometry relative="1" as="geometry"/>
+        <mxCell id="e_client_audit" edge="1" parent="1" source="client" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#1976D2;strokeWidth=1.5;fontColor=#1976D2;fontSize=9;" target="audit" value="GET /audit">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
-
-        <mxCell id="e_exec_pg" value="trades · positions" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#2E7D32;strokeWidth=1.5;fontColor=#2E7D32;fontSize=9;" edge="1" source="execution" target="postgres" parent="1">
-          <mxGeometry relative="1" as="geometry"/>
+        <mxCell id="e_dash_auth" edge="1" parent="1" source="dashboard" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#1976D2;strokeWidth=1.5;fontColor=#1976D2;fontSize=9;" target="auth" value="POST /auth/login">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="809" y="178" />
+              <mxPoint x="166" y="178" />
+            </Array>
+          </mxGeometry>
         </mxCell>
-
-        <mxCell id="e_audit_pg" value="trade_audit" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#2E7D32;strokeWidth=1.5;fontColor=#2E7D32;fontSize=9;" edge="1" source="audit" target="postgres" parent="1">
-          <mxGeometry relative="1" as="geometry"/>
+        <mxCell id="e_dash_portfolio_http" edge="1" parent="1" source="dashboard" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#1976D2;strokeWidth=1.5;fontColor=#1976D2;fontSize=9;" target="portfolio" value="GET /managers">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1337" y="110" />
+            </Array>
+          </mxGeometry>
         </mxCell>
-
-        <!-- ═══════════════════════════════════════════════
-             EDGES — Redis
-        ═══════════════════════════════════════════════ -->
-
-        <mxCell id="e_price_redis" value="write price:{sym}" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#6A1B9A;strokeWidth=1.5;fontColor=#6A1B9A;fontSize=9;" edge="1" source="price" target="redis" parent="1">
-          <mxGeometry relative="1" as="geometry"/>
+        <mxCell id="e_portfolio_dash_ws" edge="1" parent="1" source="portfolio" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#3949AB;strokeWidth=2;fontColor=#3949AB;fontSize=9;" target="dashboard" value="WS push: portfolio updates">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1309" y="178" />
+              <mxPoint x="842" y="178" />
+            </Array>
+          </mxGeometry>
         </mxCell>
-
-        <mxCell id="e_trade_redis" value="read price:{sym}" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#6A1B9A;strokeWidth=1.5;fontColor=#6A1B9A;fontSize=9;dashed=1;" edge="1" source="trade" target="redis" parent="1">
-          <mxGeometry relative="1" as="geometry"/>
+        <mxCell id="e_yahoo_price" edge="1" parent="1" source="yahoo" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#BF360C;strokeWidth=1.5;fontColor=#BF360C;fontSize=9;dashed=1;" target="price" value="fetch at startup (1.2s/symbol)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1548" y="62" />
+              <mxPoint x="425" y="62" />
+            </Array>
+          </mxGeometry>
         </mxCell>
-
-        <mxCell id="e_exec_redis" value="write position:{id}:{sym}" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#6A1B9A;strokeWidth=1.5;fontColor=#6A1B9A;fontSize=9;" edge="1" source="execution" target="redis" parent="1">
-          <mxGeometry relative="1" as="geometry"/>
+        <mxCell id="e_trade_raw" edge="1" parent="1" source="trade" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#E65100;strokeWidth=2;fontColor=#E65100;fontSize=9;" target="topic_raw" value="publish TradeEvent">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="688" y="313" />
+              <mxPoint x="173" y="313" />
+            </Array>
+          </mxGeometry>
         </mxCell>
-
-        <mxCell id="e_portfolio_redis" value="portfolio:{id} (30s TTL)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#6A1B9A;strokeWidth=1.5;fontColor=#6A1B9A;fontSize=9;" edge="1" source="portfolio" target="redis" parent="1">
-          <mxGeometry relative="1" as="geometry"/>
+        <mxCell id="e_exec_processed" edge="1" parent="1" source="execution" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#E65100;strokeWidth=2;fontColor=#E65100;fontSize=9;" target="topic_processed" value="publish TradeProcessedEvent">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="531" y="512" />
+              <mxPoint x="458" y="512" />
+            </Array>
+          </mxGeometry>
         </mxCell>
-
+        <mxCell id="e_price_live" edge="1" parent="1" source="price" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#E65100;strokeWidth=2;fontColor=#E65100;fontSize=9;" target="topic_live" value="publish PriceEvent">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="918" y="279" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_price_updated" edge="1" parent="1" source="price" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#E65100;strokeWidth=2;fontColor=#E65100;fontSize=9;" target="topic_updated" value="publish PriceUpdatedEvent">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_raw_exec" edge="1" parent="1" source="topic_raw" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#E65100;strokeWidth=2;fontColor=#E65100;fontSize=9;dashed=1;" target="execution" value="trading-group">
+          <mxGeometry relative="1" x="-0.2593" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="220" y="553" />
+              <mxPoint x="583" y="553" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_raw_audit" edge="1" parent="1" source="topic_raw" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#E65100;strokeWidth=2;fontColor=#E65100;fontSize=9;dashed=1;" target="audit" value="audit-group">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="173" y="684" />
+              <mxPoint x="798" y="684" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_processed_portfolio" edge="1" parent="1" source="topic_processed" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#E65100;strokeWidth=2;fontColor=#E65100;fontSize=9;dashed=1;" target="portfolio" value="portfolio-cache-group">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="458" y="649" />
+              <mxPoint x="1365" y="649" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_live_price_redis" edge="1" parent="1" source="topic_live" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#E65100;strokeWidth=2;fontColor=#E65100;fontSize=9;dashed=1;" target="price" value="price-redis-group → Redis">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="918" y="660" />
+              <mxPoint x="280" y="660" />
+              <mxPoint x="280" y="350" />
+              <mxPoint x="393" y="350" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_updated_portfolio" edge="1" parent="1" source="topic_updated" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#E65100;strokeWidth=2;fontColor=#E65100;fontSize=9;dashed=1;" target="portfolio" value="portfolio-cache-group (invalidate + WS push)">
+          <mxGeometry relative="1" x="-0.0212" y="-15" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="1330" y="606" />
+              <mxPoint x="1330" y="434" />
+              <mxPoint x="1323" y="434" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_portfolio_exec" edge="1" parent="1" source="portfolio" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#0277BD;strokeWidth=1.5;fontColor=#0277BD;fontSize=9;dashed=1;" target="execution" value="GET /internal/positions/{id} (cache miss)">
+          <mxGeometry relative="1" x="-0.1073" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="1342" y="499" />
+              <mxPoint x="607" y="499" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_auth_pg" edge="1" parent="1" source="auth" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#2E7D32;strokeWidth=1.5;fontColor=#2E7D32;fontSize=9;" target="postgres" value="users">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="140" y="531" />
+              <mxPoint x="260" y="531" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_exec_pg" edge="1" parent="1" source="execution" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#2E7D32;strokeWidth=1.5;fontColor=#2E7D32;fontSize=9;" target="postgres" value="trades · positions">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_audit_pg" edge="1" parent="1" source="audit" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#2E7D32;strokeWidth=1.5;fontColor=#2E7D32;fontSize=9;" target="postgres" value="trade_audit">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_price_redis" edge="1" parent="1" source="price" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#6A1B9A;strokeWidth=1.5;fontColor=#6A1B9A;fontSize=9;" target="redis" value="write price:{sym}">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="984" y="241" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_trade_redis" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#6A1B9A;strokeWidth=1.5;fontColor=#6A1B9A;fontSize=9;dashed=1;" value="read price:{sym}">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="959" y="232" />
+            </Array>
+            <mxPoint x="782" y="232" as="sourcePoint" />
+            <mxPoint x="959" y="742" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_exec_redis" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#6A1B9A;strokeWidth=1.5;fontColor=#6A1B9A;fontSize=9;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" value="write pos + acct→manager">
+          <mxGeometry relative="1" x="-0.0346" y="3" as="geometry">
+            <mxPoint y="-1" as="offset" />
+            <Array as="points">
+              <mxPoint x="634" y="802" />
+            </Array>
+            <mxPoint x="634" y="450" as="sourcePoint" />
+            <mxPoint x="831" y="802" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_portfolio_redis" edge="1" parent="1" source="portfolio" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#6A1B9A;strokeWidth=1.5;fontColor=#6A1B9A;fontSize=9;" target="redis" value="portfolio:{id} cache (30s TTL)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1003" y="235" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_prom_scrape" edge="1" parent="1" source="prometheus" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#7B1FA2;strokeWidth=1.5;fontColor=#7B1FA2;fontSize=9;dashed=1;" target="portfolio" value="scrape /actuator/prometheus">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="593" y="480" />
+              <mxPoint x="1295" y="480" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_grafana_prom" edge="1" parent="1" source="grafana" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#7B1FA2;strokeWidth=1.5;fontColor=#7B1FA2;fontSize=9;" target="prometheus" value="datasource">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
