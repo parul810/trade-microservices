@@ -1,0 +1,38 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: trade-service
+
+  data:
+    redis:
+      host: localhost
+      port: 6380
+
+  kafka:
+    bootstrap-servers: localhost:9094
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      retries: 2147483647
+      properties:
+        enable.idempotence: true
+
+jwt:
+  secret: "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970"
+  expiration-ms: 86400000
+
+app:
+  supported-symbols: AAPL,MSFT,GOOGL,NVDA,META,AMZN,JPM,GS,BAC,MS,BNPQY,TSLA,NFLX,DIS,XOM,JNJ
+  kafka:
+    topics:
+      trades-raw: trades.raw.topic
+      trades-dlq: trades.dlq.topic
+
+logging:
+  level:
+    com.demo.trade: INFO
+  file:
+    name: /tmp/trade-service.log

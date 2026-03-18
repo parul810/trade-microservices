@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TradeVision — Real-Time Portfolio Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Syne:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --bg:         #070a0f;
+  --s1:         #0c1018;
+  --s2:         #111620;
+  --s3:         #161d2a;
+  --border:     #1e2a3a;
+  --text:       #dde4f0;
+  --muted:      #4a5a75;
+  --up:         #00d27a;
+  --down:       #ff4560;
+  --flat:       #5a7aaa;
+  --accent:     #3b82f6;
+  --gold:       #f59e0b;
+  --flash-up:   rgba(0,210,122,0.18);
+  --flash-down: rgba(255,69,96,0.18);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::after {
+  content:'';
+  position:fixed;
+  inset:0;
+  background: repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);
+  pointer-events:none;
+  z-index:999;
+}
+
+.shell { display:grid; grid-template-rows: auto auto 1fr; min-height:100vh; }
+
+/* TOP BAR */
+.topbar {
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 0 28px; height: 52px;
+  background: var(--s1); border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 50;
+}
+.topbar-left { display:flex; align-items:center; gap:24px; }
+.logo { font-family:'Syne',sans-serif; font-size:16px; font-weight:800; letter-spacing:-0.5px; color:var(--accent); }
+.logo span { color:var(--text); }
+
+.ws-status {
+  display:flex; align-items:center; gap:6px;
+  font-size:10px; letter-spacing:1.5px; text-transform:uppercase;
+  padding: 3px 10px; border-radius: 20px; border: 1px solid;
+  transition: all 0.3s;
+}
+.ws-status.connected { color:var(--up); border-color:rgba(0,210,122,0.25); }
+.ws-status.connecting { color:var(--gold); border-color:rgba(245,158,11,0.25); }
+.ws-status.disconnected { color:var(--down); border-color:rgba(255,69,96,0.25); }
+
+.ws-dot { width:6px; height:6px; border-radius:50%; background:currentColor; }
+.ws-status.connected .ws-dot { animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+
+.topbar-right { display:flex; align-items:center; gap:16px; }
+.manager-tabs { display:flex; gap:4px; flex-wrap:wrap; }
+.mgr-tab {
+  padding: 5px 14px; background: none; border: 1px solid var(--border);
+  border-radius: 3px; color: var(--muted); font-family:'JetBrains Mono',monospace;
+  font-size:11px; letter-spacing:0.5px; cursor:pointer; transition: all 0.2s;
+}
+.mgr-tab.active { background: var(--accent); color: white; border-color: var(--accent); }
+.mgr-tab:hover:not(.active) { color: var(--text); border-color: var(--text); }
+.clock { font-size:12px; color:var(--muted); letter-spacing:1px; }
+
+/* KPI ROW */
+.kpi-row {
+  display:grid; grid-template-columns: repeat(5, 1fr);
+  gap:1px; background: var(--border); border-bottom: 1px solid var(--border);
+}
+.kpi {
+  background: var(--s1); padding: 16px 24px;
+  position:relative; overflow:hidden; transition: background 0.4s;
+}
+.kpi::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; }
+.kpi.accent::after { background: var(--accent); }
+.kpi.up::after     { background: var(--up); }
+.kpi.down::after   { background: var(--down); }
+.kpi.gold::after   { background: var(--gold); }
+.kpi.flat::after   { background: var(--flat); }
+.kpi-label { font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
+.kpi-value { font-size:24px; font-weight:600; line-height:1; transition: color 0.3s; }
+.kpi-sub   { font-size:10px; color:var(--muted); margin-top:4px; }
+
+.flash-up   { animation: flashUp 0.6s ease; }
+.flash-down { animation: flashDown 0.6s ease; }
+@keyframes flashUp   { 0%{background:var(--flash-up);}   100%{background:transparent;} }
+@keyframes flashDown { 0%{background:var(--flash-down);} 100%{background:transparent;} }
+
+/* MAIN */
+.main { display:grid; grid-template-columns: 1fr 320px; overflow:hidden; }
+
+/* TABLE SECTION */
+.table-section { padding: 24px 28px; overflow-y:auto; }
+.section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+.section-title { font-family:'Syne',sans-serif; font-size:13px; font-weight:600; letter-spacing:1px; text-transform:uppercase; color:var(--muted); }
+.live-tag { font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--up); border:1px solid rgba(0,210,122,0.3); padding:3px 8px; border-radius:2px; }
+
+.pos-table { width:100%; border-collapse:collapse; }
+.pos-table thead th {
+  padding: 8px 14px; text-align:left; font-size:9px; letter-spacing:2px;
+  text-transform:uppercase; color:var(--muted); border-bottom: 1px solid var(--border); font-weight:400;
+}
+.pos-table thead th:not(:first-child) { text-align:right; }
+.pos-table tbody tr { border-bottom: 1px solid rgba(30,42,58,0.6); transition: background 0.15s; }
+.pos-table tbody tr:hover { background: var(--s2); }
+.pos-table td { padding: 14px; font-size:13px; }
+.pos-table td:not(:first-child) { text-align:right; }
+
+.sym-cell { display:flex; align-items:center; gap:10px; }
+.sym-badge { width:32px; height:32px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; flex-shrink:0; }
+.sym-name { font-size:13px; font-weight:600; }
+.sym-full { font-size:10px; color:var(--muted); margin-top:1px; }
+
+.price-val { font-size:14px; font-weight:600; }
+.price-chg { font-size:10px; margin-top:2px; }
+.dir-arrow { font-size:18px; }
+.pnl-val { font-size:13px; font-weight:600; }
+.pnl-pct { font-size:10px; margin-top:2px; }
+
+.row-flash-up   { animation: rowFlashUp 0.7s ease; }
+.row-flash-down { animation: rowFlashDown 0.7s ease; }
+@keyframes rowFlashUp   { 0%{background:rgba(0,210,122,0.12);}   100%{background:transparent;} }
+@keyframes rowFlashDown { 0%{background:rgba(255,69,96,0.12);}   100%{background:transparent;} }
+
+/* empty state */
+.empty-state {
+  text-align:center; padding: 60px 20px; color: var(--muted);
+}
+.empty-state h3 { font-family:'Syne',sans-serif; font-size:16px; margin-bottom:8px; color:var(--text); }
+.empty-state p  { font-size:11px; line-height:1.6; }
+
+/* arch box */
+.arch-note {
+  margin-top:32px; padding:20px;
+  background:var(--s2); border:1px solid var(--border); border-radius:4px;
+}
+
+/* SIDEBAR */
+.sidebar {
+  background: var(--s1); border-left: 1px solid var(--border);
+  display:flex; flex-direction:column; overflow:hidden;
+}
+.sidebar-section { padding:18px 20px; border-bottom:1px solid var(--border); }
+.sidebar-title { font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:14px; }
+
+.spark-row { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+.spark-sym { font-size:11px; font-weight:600; width:42px; flex-shrink:0; }
+.spark-track { flex:1; height:24px; display:flex; align-items:flex-end; gap:1px; }
+.spark-bar { flex:1; border-radius:1px; transition: height 0.3s; min-height:2px; }
+.spark-price { font-size:11px; font-weight:600; width:56px; text-align:right; flex-shrink:0; }
+.spark-dir   { font-size:14px; width:16px; flex-shrink:0; }
+
+.event-feed { flex:1; overflow-y:auto; padding:0; }
+.event-item { padding:12px 20px; border-bottom:1px solid rgba(30,42,58,0.5); animation: slideIn 0.3s ease; }
+@keyframes slideIn { from{opacity:0;transform:translateX(8px);} to{opacity:1;transform:translateX(0);} }
+.event-type { font-size:8px; letter-spacing:2px; text-transform:uppercase; margin-bottom:3px; }
+.event-body { font-size:11px; line-height:1.5; }
+.event-time { font-size:9px; color:var(--muted); margin-top:3px; }
+.event-type.ws    { color:var(--accent); }
+.event-type.trade { color:var(--up); }
+.event-type.price { color:var(--gold); }
+.event-type.info  { color:var(--muted); }
+
+::-webkit-scrollbar { width:3px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+
+@media(max-width:900px) {
+  .main { grid-template-columns:1fr; }
+  .sidebar { display:none; }
+  .kpi-row { grid-template-columns:repeat(3,1fr); }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="logo">Trade<span>Vision</span></div>
+      <div class="ws-status connecting" id="ws-status">
+        <div class="ws-dot"></div>
+        <span id="ws-label">CONNECTING</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="manager-tabs" id="manager-tabs"></div>
+      <div class="clock" id="clock">--:--:--</div>
+    </div>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi accent">
+      <div class="kpi-label">Total Portfolio Value</div>
+      <div class="kpi-value" id="kpi-total">—</div>
+      <div class="kpi-sub" id="kpi-account">Loading...</div>
+    </div>
+    <div class="kpi up">
+      <div class="kpi-label">Unrealised P&amp;L</div>
+      <div class="kpi-value" id="kpi-pnl">—</div>
+      <div class="kpi-sub" id="kpi-pnl-pct">—</div>
+    </div>
+    <div class="kpi gold">
+      <div class="kpi-label">Day Change</div>
+      <div class="kpi-value" id="kpi-daychange">—</div>
+      <div class="kpi-sub" id="kpi-daychange-pct">—</div>
+    </div>
+    <div class="kpi flat">
+      <div class="kpi-label">Positions</div>
+      <div class="kpi-value" id="kpi-positions">—</div>
+      <div class="kpi-sub">active symbols</div>
+    </div>
+    <div class="kpi flat">
+      <div class="kpi-label">Last Update</div>
+      <div class="kpi-value" style="font-size:16px;" id="kpi-lastupdate">—</div>
+      <div class="kpi-sub">via WebSocket push</div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="table-section">
+      <div class="section-header">
+        <div class="section-title" id="portfolio-title">Loading portfolio...</div>
+        <div class="live-tag">⬤ LIVE PRICES</div>
+      </div>
+      <table class="pos-table">
+        <thead>
+          <tr>
+            <th>Symbol</th>
+            <th>Qty</th>
+            <th>Avg Cost</th>
+            <th>Live Price</th>
+            <th>Dir</th>
+            <th>Market Value</th>
+            <th>Unrealised P&amp;L</th>
+          </tr>
+        </thead>
+        <tbody id="pos-tbody"></tbody>
+      </table>
+
+      <div class="arch-note">
+        <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;">WebSocket Push Architecture</div>
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:10px;color:var(--muted);">
+          <span style="padding:4px 10px;background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.3);border-radius:2px;color:var(--accent);">Price Feed</span>
+          <span>→</span>
+          <span style="padding:4px 10px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);border-radius:2px;color:var(--gold);">Kafka prices.updated</span>
+          <span>→</span>
+          <span style="padding:4px 10px;background:var(--s3);border:1px solid var(--border);border-radius:2px;">PriceUpdatedConsumer</span>
+          <span>→</span>
+          <span style="padding:4px 10px;background:var(--s3);border:1px solid var(--border);border-radius:2px;">PortfolioService</span>
+          <span>→</span>
+          <span style="padding:4px 10px;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.2);border-radius:2px;color:var(--accent);">WS /topic/portfolio/{acc}</span>
+          <span>→</span>
+          <span style="padding:4px 10px;background:rgba(0,210,122,0.15);border:1px solid rgba(0,210,122,0.3);border-radius:2px;color:var(--up);">This Dashboard ⬤</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title">Price Sparklines — Last 20 ticks</div>
+        <div id="sparklines"></div>
+      </div>
+      <div class="sidebar-section" style="padding-bottom:12px;">
+        <div class="sidebar-title">Live Event Feed</div>
+      </div>
+      <div class="event-feed" id="event-feed"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const AUTH_URL      = 'http://localhost:8084/auth/login';
+const PORTFOLIO_URL = '/managers';
+
+const COMPANIES = {
+  AAPL:'Apple Inc.', MSFT:'Microsoft Corp.', GOOGL:'Alphabet Inc.',
+  JPM:'JPMorgan Chase', TSLA:'Tesla Inc.', AMZN:'Amazon.com Inc.',
+  NVDA:'NVIDIA Corp.', META:'Meta Platforms', NFLX:'Netflix Inc.',
+  BRK:'Berkshire Hathaway', V:'Visa Inc.', MA:'Mastercard Inc.'
+};
+const SYM_COLORS = ['#3b82f6','#8b5cf6','#06b6d4','#f59e0b','#ec4899','#10b981','#f97316','#6366f1','#14b8a6','#a855f7'];
+
+let token         = null;
+let managers      = [];
+let currentMgrId  = null;
+let currentPortfolios = {};   // accountId → PortfolioResponse
+let stompClient   = null;
+let subscriptions = {};
+let sparkHistory  = {};       // symbol → [{price, prevClose, direction}]
+let symColorMap   = {};
+
+// ── UTILITIES ────────────────────────────────────────────────────────────────
+
+const fmt    = n => '$' + Math.abs(+n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const sign   = n => +n >= 0 ? '+' : '-';
+const col    = n => +n > 0 ? 'var(--up)' : +n < 0 ? 'var(--down)' : 'var(--flat)';
+const arrow  = d => d === 'UP' ? '↑' : d === 'DOWN' ? '↓' : '→';
+const nowStr = () => new Date().toLocaleTimeString('en-GB',{hour12:false});
+
+function flash(el, cls) {
+  if (!el) return;
+  el.classList.remove('row-flash-up','row-flash-down','flash-up','flash-down');
+  void el.offsetWidth;
+  el.classList.add(cls);
+}
+
+function symColor(sym) {
+  if (!symColorMap[sym]) {
+    const idx = Object.keys(symColorMap).length % SYM_COLORS.length;
+    symColorMap[sym] = SYM_COLORS[idx];
+  }
+  return symColorMap[sym];
+}
+
+// ── CLOCK ────────────────────────────────────────────────────────────────────
+
+setInterval(() => { document.getElementById('clock').textContent = nowStr() + ' IST'; }, 1000);
+document.getElementById('clock').textContent = nowStr() + ' IST';
+
+// ── EVENT FEED ───────────────────────────────────────────────────────────────
+
+function addEvent(type, msg) {
+  const feed  = document.getElementById('event-feed');
+  const item  = document.createElement('div');
+  item.className = 'event-item';
+  const labels = { ws:'WebSocket', trade:'Trade', price:'Price Push', info:'Info' };
+  item.innerHTML = `
+    <div class="event-type ${type}">${labels[type] || type}</div>
+    <div class="event-body">${msg}</div>
+    <div class="event-time">${nowStr()}</div>`;
+  feed.insertBefore(item, feed.firstChild);
+  while (feed.children.length > 50) feed.removeChild(feed.lastChild);
+}
+
+// ── WS STATUS ────────────────────────────────────────────────────────────────
+
+function setWsStatus(state) {
+  const el  = document.getElementById('ws-status');
+  const lbl = document.getElementById('ws-label');
+  el.className = 'ws-status ' + state;
+  lbl.textContent = state.toUpperCase();
+}
+
+// ── AUTH ─────────────────────────────────────────────────────────────────────
+
+async function login() {
+  const resp = await fetch(AUTH_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: 'admin', password: 'admin123' })
+  });
+  if (!resp.ok) throw new Error('Login failed: ' + resp.status);
+  const data = await resp.json();
+  token = data.token;
+  addEvent('info', 'Authenticated as admin');
+}
+
+// ── LOAD MANAGERS ────────────────────────────────────────────────────────────
+
+async function loadManagers() {
+  const resp = await fetch(PORTFOLIO_URL, {
+    headers: { 'Authorization': 'Bearer ' + token }
+  });
+  if (!resp.ok) throw new Error('Failed to load managers');
+  managers = await resp.json();
+  renderManagerTabs();
+  addEvent('info', `Loaded ${managers.length} portfolio managers`);
+}
+
+function renderManagerTabs() {
+  const container = document.getElementById('manager-tabs');
+  container.innerHTML = '';
+  managers.forEach(mgr => {
+    const btn = document.createElement('button');
+    btn.className = 'mgr-tab' + (mgr.managerId === currentMgrId ? ' active' : '');
+    btn.textContent = mgr.name;
+    btn.onclick = () => selectManager(mgr.managerId);
+    container.appendChild(btn);
+  });
+}
+
+// ── SELECT MANAGER ───────────────────────────────────────────────────────────
+
+async function selectManager(mgrId) {
+  currentMgrId = mgrId;
+
+  // Update tab highlight
+  document.querySelectorAll('.mgr-tab').forEach(t => {
+    t.classList.toggle('active', t.textContent === managers.find(m => m.managerId === mgrId)?.name);
+  });
+
+  // Unsubscribe from old accounts and clear per-manager state
+  Object.values(subscriptions).forEach(s => { try { s.unsubscribe(); } catch(e){} });
+  subscriptions = {};
+  currentPortfolios = {};
+  sparkHistory = {};        // clear stale sparklines from previous manager tab
+
+  const mgr = managers.find(m => m.managerId === mgrId);
+  document.getElementById('portfolio-title').textContent =
+    `Portfolio — ${mgr?.name || mgrId}`;
+  document.getElementById('kpi-account').textContent = mgrId;
+
+  // Load portfolio for all accounts under this manager
+  const resp = await fetch(`/managers/${mgrId}/portfolio`, {
+    headers: { 'Authorization': 'Bearer ' + token }
+  });
+
+  if (resp.ok) {
+    const portfolios = await resp.json();
+    portfolios.forEach(p => {
+      currentPortfolios[p.accountId] = p;
+      // Seed sparkHistory immediately from REST data so sparklines show on first render
+      p.positions.forEach(pos => {
+        sparkRecord(pos.symbol, +pos.currentPrice, +pos.prevClose, pos.direction);
+      });
+      subscribeToAccount(p.accountId);
+    });
+    renderTable();
+    renderSparklines();
+    addEvent('ws', `Subscribed to ${portfolios.length} account(s) for ${mgr?.name}`);
+  } else {
+    renderEmptyState('No portfolio data yet. Submit some trades first!');
+  }
+}
+
+// ── WS SUBSCRIBE ─────────────────────────────────────────────────────────────
+
+function subscribeToAccount(accountId) {
+  if (!stompClient || !stompClient.connected) return;
+  const sub = stompClient.subscribe('/topic/portfolio/' + accountId, msg => {
+    const portfolio = JSON.parse(msg.body);
+    onPortfolioUpdate(portfolio);
+  });
+  subscriptions[accountId] = sub;
+}
+
+// Record a sparkline tick only when the price actually changes.
+// Multiple accounts can hold the same symbol and push the same Redis price —
+// without dedup, 20 identical entries fill the window and bars go flat.
+function sparkRecord(symbol, price, prevClose, direction) {
+  if (!sparkHistory[symbol]) sparkHistory[symbol] = [];
+  const hist = sparkHistory[symbol];
+  const last = hist.length > 0 ? hist[hist.length - 1] : null;
+  if (last && last.price === price) {
+    // Same price: just refresh metadata on the latest entry (prevClose/direction may vary)
+    hist[hist.length - 1] = { price, prevClose, direction };
+    return;
+  }
+  hist.push({ price, prevClose, direction });
+  if (hist.length > 20) hist.shift();
+}
+
+function onPortfolioUpdate(portfolio) {
+  const prev = currentPortfolios[portfolio.accountId];
+  currentPortfolios[portfolio.accountId] = portfolio;
+
+  portfolio.positions.forEach(pos => {
+    sparkRecord(pos.symbol, +pos.currentPrice, +pos.prevClose, pos.direction);
+  });
+
+  renderTable();
+  renderSparklines();
+
+  // Flash KPI total
+  if (prev) {
+    const prevTotal = Object.values(currentPortfolios)
+      .filter((_, i) => Object.keys(currentPortfolios)[i] !== portfolio.accountId)
+      .reduce((s, p) => s + +p.totalValue, 0) + +(prev.totalValue);
+    const newTotal = Object.values(currentPortfolios).reduce((s, p) => s + +p.totalValue, 0);
+    if (newTotal !== prevTotal) {
+      flash(document.getElementById('kpi-total').parentElement, newTotal > prevTotal ? 'flash-up' : 'flash-down');
+    }
+  }
+
+  addEvent('price', `Portfolio updated | acc=${portfolio.accountId} value=${fmt(portfolio.totalValue)}`);
+}
+
+// ── RENDER TABLE ─────────────────────────────────────────────────────────────
+
+function renderTable() {
+  // Aggregate all positions across accounts for this manager
+  const posMap = {};  // symbol → aggregated
+
+  Object.values(currentPortfolios).forEach(portfolio => {
+    (portfolio.positions || []).forEach(pos => {
+      if (!posMap[pos.symbol]) {
+        posMap[pos.symbol] = { ...pos, quantity: 0, marketValue: 0, unrealisedPnl: 0, dayChange: 0, costBasis: 0 };
+      }
+      const p = posMap[pos.symbol];
+      p.quantity      += +pos.quantity;
+      p.marketValue   += +pos.marketValue;
+      p.unrealisedPnl += +pos.unrealisedPnl;
+      p.dayChange     += +pos.dayChange;
+      p.costBasis     += +pos.avgCost * +pos.quantity;
+      p.currentPrice   = pos.currentPrice;
+      p.prevClose      = pos.prevClose;
+      p.direction      = pos.direction;
+    });
+  });
+
+  const positions = Object.values(posMap);
+  const tbody     = document.getElementById('pos-tbody');
+
+  if (positions.length === 0) {
+    renderEmptyState('No open positions. Submit some trades to see your portfolio here.');
+    return;
+  }
+
+  tbody.innerHTML = '';
+
+  let totalValue = 0, totalPnl = 0, totalDayChange = 0;
+
+  positions.forEach(pos => {
+    const color    = symColor(pos.symbol);
+    const initials = pos.symbol.slice(0, 2);
+    const company  = COMPANIES[pos.symbol] || pos.symbol;
+    const pnlPct   = pos.costBasis > 0 ? ((pos.unrealisedPnl / pos.costBasis) * 100).toFixed(2) : '0.00';
+    const dayChgPct= +pos.prevClose > 0
+      ? (((+pos.currentPrice - +pos.prevClose) / +pos.prevClose) * 100).toFixed(2)
+      : '0.00';
+
+    totalValue    += pos.marketValue;
+    totalPnl      += pos.unrealisedPnl;
+    totalDayChange += pos.dayChange;
+
+    const tr = document.createElement('tr');
+    tr.id = `row-${pos.symbol}`;
+    tr.innerHTML = `
+      <td>
+        <div class="sym-cell">
+          <div class="sym-badge" style="background:${color}22;color:${color}">${initials}</div>
+          <div>
+            <div class="sym-name">${pos.symbol}</div>
+            <div class="sym-full">${company}</div>
+          </div>
+        </div>
+      </td>
+      <td>${(+pos.quantity).toLocaleString()}</td>
+      <td>${fmt(pos.avgCost)}</td>
+      <td>
+        <div class="price-val" style="color:${col(+pos.currentPrice - +pos.prevClose)}">${fmt(pos.currentPrice)}</div>
+        <div class="price-chg" style="color:${col(dayChgPct)}">${sign(dayChgPct)}${Math.abs(dayChgPct)}% today</div>
+      </td>
+      <td><div class="dir-arrow" style="color:${col(pos.direction === 'UP' ? 1 : pos.direction === 'DOWN' ? -1 : 0)}">${arrow(pos.direction)}</div></td>
+      <td><div style="font-size:13px;font-weight:600;">${fmt(pos.marketValue)}</div></td>
+      <td>
+        <div class="pnl-val" style="color:${col(pos.unrealisedPnl)}">${sign(pos.unrealisedPnl)}${fmt(pos.unrealisedPnl)}</div>
+        <div class="pnl-pct" style="color:${col(pnlPct)}">${sign(pnlPct)}${Math.abs(pnlPct)}%</div>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+
+  // Update KPIs
+  document.getElementById('kpi-total').textContent     = fmt(totalValue);
+  document.getElementById('kpi-positions').textContent = positions.length;
+  document.getElementById('kpi-lastupdate').textContent = nowStr();
+
+  const pnlPct = totalValue > 0 ? (((totalPnl) / (totalValue - totalPnl)) * 100).toFixed(2) : '0.00';
+  document.getElementById('kpi-pnl').textContent      = sign(totalPnl) + fmt(totalPnl);
+  document.getElementById('kpi-pnl').style.color      = col(totalPnl);
+  document.getElementById('kpi-pnl-pct').textContent  = sign(pnlPct) + Math.abs(pnlPct) + '%';
+
+  const dayPct = (totalValue - totalDayChange) > 0
+    ? ((totalDayChange / (totalValue - totalDayChange)) * 100).toFixed(2) : '0.00';
+  document.getElementById('kpi-daychange').textContent    = sign(totalDayChange) + fmt(totalDayChange);
+  document.getElementById('kpi-daychange').style.color    = col(totalDayChange);
+  document.getElementById('kpi-daychange-pct').textContent = sign(dayPct) + Math.abs(dayPct) + '% today';
+}
+
+function renderEmptyState(msg) {
+  document.getElementById('pos-tbody').innerHTML = `
+    <tr><td colspan="7">
+      <div class="empty-state">
+        <h3>No Positions</h3>
+        <p>${msg}</p>
+      </div>
+    </td></tr>`;
+  ['kpi-total','kpi-pnl','kpi-daychange'].forEach(id => {
+    document.getElementById(id).textContent = '$0.00';
+  });
+  document.getElementById('kpi-positions').textContent = '0';
+}
+
+// ── SPARKLINES ───────────────────────────────────────────────────────────────
+
+function hexRgba(hex, a) {
+  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  return `rgba(${r},${g},${b},${a})`;
+}
+
+function renderSparklines() {
+  const container = document.getElementById('sparklines');
+  container.innerHTML = '';
+
+  Object.entries(sparkHistory).forEach(([sym, hist]) => {
+    if (hist.length < 1) return;
+    const color    = symColor(sym);
+    const latest   = hist[hist.length - 1];
+    const prices   = hist.map(h => h.price);
+
+    // Day-change % uses backend prevClose — always accurate regardless of window size
+    const dayChgPct = latest.prevClose > 0
+        ? ((latest.price - latest.prevClose) / latest.prevClose * 100).toFixed(2)
+        : '0.00';
+    const signStr  = dayChgPct >= 0 ? '+' : '';
+
+    // Direction from backend: UP / DOWN / FLAT
+    const dirArrow = latest.direction === 'UP' ? '↑' : latest.direction === 'DOWN' ? '↓' : '→';
+    const dirVal   = latest.direction === 'UP' ? 1 : latest.direction === 'DOWN' ? -1 : 0;
+
+    // Scale bars to actual price range with 0.8% floor so shape always shows
+    const dataMin  = Math.min(...prices);
+    const dataMax  = Math.max(...prices);
+    const mid      = (dataMax + dataMin) / 2;
+    const minRange = mid * 0.008;
+    const lo       = Math.min(dataMin, mid - minRange / 2);
+    const hi       = Math.max(dataMax, mid + minRange / 2);
+    const range    = hi - lo;
+
+    const n = prices.length;
+    const bars = prices.map((v, i) => {
+      const h     = Math.max(2, Math.round(((v - lo) / range) * 20) + 2); // 2–22px
+      const isLast = i === n - 1;
+      const alpha  = isLast ? 1.0 : (0.15 + (i / Math.max(n - 1, 1)) * 0.70).toFixed(2);
+      return `<div class="spark-bar" style="height:${h}px;background:${hexRgba(color, alpha)}"></div>`;
+    }).join('');
+
+    const row = document.createElement('div');
+    row.className = 'spark-row';
+    row.innerHTML = `
+      <div class="spark-sym" style="color:${color}">${sym}</div>
+      <div class="spark-track">${bars}</div>
+      <div class="spark-price" style="color:${col(dirVal)}">${signStr}${dayChgPct}%</div>
+      <div class="spark-dir"  style="color:${col(dirVal)}">${dirArrow}</div>`;
+    container.appendChild(row);
+  });
+}
+
+// ── WEBSOCKET CONNECT ─────────────────────────────────────────────────────────
+
+function connectWebSocket() {
+  const socket = new SockJS('/ws');
+  stompClient  = Stomp.over(socket);
+  stompClient.debug = null; // suppress console noise
+
+  stompClient.connect({}, frame => {
+    setWsStatus('connected');
+    addEvent('ws', 'STOMP connected — subscribing to portfolio topics');
+
+    // Re-subscribe to current manager's accounts
+    Object.keys(currentPortfolios).forEach(accountId => subscribeToAccount(accountId));
+
+  }, error => {
+    setWsStatus('disconnected');
+    addEvent('ws', 'WS disconnected — retrying in 5s');
+    setTimeout(connectWebSocket, 5000);
+  });
+}
+
+// ── BOOTSTRAP ────────────────────────────────────────────────────────────────
+
+async function init() {
+  try {
+    await login();
+    await loadManagers();
+
+    // Select first manager that has accounts
+    const firstWithAccounts = managers.find(m => m.accounts && m.accounts.length > 0);
+    const first = firstWithAccounts || managers[0];
+    if (first) {
+      await selectManager(first.managerId);
+    } else {
+      renderEmptyState('No managers found. Check your portfolio-service configuration.');
+    }
+
+    connectWebSocket();
+  } catch (err) {
+    addEvent('info', 'Init error: ' + err.message);
+    document.getElementById('portfolio-title').textContent = 'Connection Error — ' + err.message;
+  }
+}
+
+init();
+</script>
+</body>
+</html>

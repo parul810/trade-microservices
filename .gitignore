@@ -1,0 +1,18 @@
+# Build output
+**/target/
+*.class
+*.jar
+*.war
+
+# IDE
+.DS_Store
+.vscode/
+.idea/
+*.iml
+
+# Logs
+*.log
+/tmp/
+
+# Maven wrapper
+!.mvn/wrapper/maven-wrapper.jar

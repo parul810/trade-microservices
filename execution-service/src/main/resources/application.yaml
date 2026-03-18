@@ -1,0 +1,92 @@
+server:
+  port: 8086
+
+spring:
+  application:
+    name: execution-service
+
+  datasource:
+    url: jdbc:postgresql://localhost:5433/trading
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  data:
+    redis:
+      host: localhost
+      port: 6380
+
+  kafka:
+    bootstrap-servers: localhost:9094
+    consumer:
+      group-id: trading-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "com.demo.commons.model.kafka,com.demo.trade_portfolio.model.kafka"
+        spring.json.value.default.type: com.demo.commons.model.kafka.TradeEvent
+        group.instance.id: ${HOSTNAME:execution-service-1}
+        session.timeout.ms: 45000
+        heartbeat.interval.ms: 5000
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      retries: 2147483647
+      properties:
+        enable.idempotence: true
+
+jwt:
+  secret: "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970"
+  expiration-ms: 86400000
+
+app:
+  kafka:
+    topics:
+      trades-raw: trades.raw.topic
+      trades-processed: trades.processed.topic
+      trades-retry: trades.retry.topic
+      trades-dlq: execution.dlq.topic
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      redis:
+        # Open the circuit after 5 failures in a 10-call sliding window
+        sliding-window-type: COUNT_BASED
+        sliding-window-size: 10
+        failure-rate-threshold: 50          # 50% failure rate → OPEN
+        minimum-number-of-calls: 5          # need at least 5 calls before evaluating
+        # Stay OPEN for 15s, then allow one probe call (HALF-OPEN)
+        wait-duration-in-open-state: 15s
+        permitted-number-of-calls-in-half-open-state: 1
+        automatic-transition-from-open-to-half-open-enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,prometheus
+  metrics:
+    tags:
+      application: execution-service       # attached as a label to every metric
+    enable:
+      kafka: true
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
+logging:
+  level:
+    com.demo.execution: INFO
+  file:
+    name: /tmp/execution-service.log

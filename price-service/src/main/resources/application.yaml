@@ -1,0 +1,51 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: price-service
+
+  data:
+    redis:
+      host: localhost
+      port: 6380
+
+  kafka:
+    bootstrap-servers: localhost:9094
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      retries: 2147483647
+      properties:
+        enable.idempotence: true
+    consumer:
+      group-id: price-consumer-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      properties:
+        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+        spring.json.trusted.packages: "com.demo.commons.model.kafka,com.demo.trade_portfolio.model.kafka"
+        spring.json.value.default.type: com.demo.commons.model.kafka.PriceEvent
+    listener:
+      ack-mode: record
+
+jwt:
+  secret: "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970"
+  expiration-ms: 86400000
+
+app:
+  supported-symbols: AAPL,MSFT,GOOGL,NVDA,META,AMZN,JPM,GS,BAC,MS,BNPQY,TSLA,NFLX,DIS,XOM,JNJ
+  price-poll-interval-ms: 15000
+  kafka:
+    topics:
+      prices-live: prices.live.topic
+      prices-updated: prices.updated.topic
+      price-dlq: price.dlq.topic
+
+logging:
+  level:
+    com.demo.price: INFO
+  file:
+    name: /tmp/price-service.log
